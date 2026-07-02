@@ -1,0 +1,13 @@
+# Core dependencies
+paddleocr>=2.7.0
+paddlepaddle>=2.6.0
+PyQt5>=5.15.0
+opencv-python>=4.8.0
+Pillow>=10.0.0
+pdf2image>=1.16.0
+pypdf>=3.0.0
+fuzzywuzzy>=0.18.0
+python-Levenshtein>=0.21.0
+PyYAML>=6.0
+numpy>=1.24.0,<2.0
+winsdk>=1.0.0

@@ -1,0 +1,6 @@
+2026-06-29 23:33:48,520 | INFO | ==================================================
+2026-06-29 23:33:48,520 | INFO | 日文零件图纸术语自动翻译应用启动
+2026-06-29 23:33:48,520 | INFO | 日志目录: C:\MyProject\project11\日文零件图纸术语自动翻译功能\japanese_drawing_translator\logs
+2026-06-29 23:33:48,520 | INFO | 日志保留: 180 天
+2026-06-29 23:33:48,520 | INFO | ==================================================
+2026-06-29 23:33:53,148 | WARNING | Applied processor reduces input query to empty string, all comparisons will have score 0. [Query: '-']

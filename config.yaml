@@ -1,0 +1,47 @@
+# 日文零件图纸术语自动翻译应用 - 配置文件
+# Japanese Mechanical Drawing Terminology Auto-Translation - Configuration
+
+# 图像预处理参数
+preprocessing:
+  grayscale: true           # 灰度化
+  denoise: true             # 降噪
+  adaptive_threshold: true  # 自适应二值化
+  deskew: true              # 旋转校正
+  denoise_strength: 10      # 降噪强度 (1-30)
+  binary_block_size: 11     # 二值化块大小
+  binary_c: 2               # 二值化常数
+  max_dimension: 3000       # 大图最大边长 (超过等比缩放, 提升性能)
+
+# OCR 参数
+ocr:
+  lang: "ja"                # EasyOCR 日文语言代码
+  engine: "easyocr"         # OCR引擎: easyocr (推荐) | paddleocr
+  min_confidence: 0.7       # 最低置信度阈值
+  merge_iou_threshold: 0.8  # 重叠框合并 IOU 阈值
+  use_gpu: false            # 是否使用 GPU 加速
+
+# 翻译参数
+translator:
+  dictionary_path: "dictionary.json"  # 术语词典路径
+  fuzzy_threshold: 85       # 模糊匹配最低相似度 (%)
+  untranslated_marker: "[未翻译]"  # 未匹配标记
+
+# 标注叠加参数
+overlay:
+  text_color: [255, 0, 0]   # 红色字体 (RGB)
+  cover_bg_color: [255, 255, 255]  # 遮挡背景色 (白色)
+  font_scale_ratio: 0.8     # 字体大小占文本框高度比例
+  default_cover_mode: true  # 默认遮挡模式
+
+# 日志参数
+logging:
+  log_dir: "logs"
+  log_level: "INFO"
+  retention_days: 180       # 日志保留天数
+  log_format: "%(asctime)s | %(levelname)s | %(message)s"
+
+# 输出参数
+output:
+  default_dir: "output"
+  export_image_format: "png"  # 导出图片格式 (png/jpg)
+  export_dpi: 300             # 导出DPI

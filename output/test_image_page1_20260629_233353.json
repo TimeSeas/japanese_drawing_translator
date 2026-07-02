@@ -1,0 +1,158 @@
+{
+  "source_file": "test_image.png",
+  "processed_at": "2026-06-29T23:33:53.197773",
+  "page": 1,
+  "image_size": {
+    "width": 1200,
+    "height": 350
+  },
+  "preprocessing": {},
+  "texts": [
+    {
+      "text": "深冷処理",
+      "confidence": 1.0,
+      "bbox": {
+        "min_x": 59.0,
+        "min_y": 214.0,
+        "max_x": 204.0,
+        "max_y": 262.0
+      },
+      "id": 1,
+      "original": "深冷処理",
+      "translated": "深冷处理",
+      "match_method": "exact"
+    },
+    {
+      "text": "面取",
+      "confidence": 1.0,
+      "bbox": {
+        "min_x": 73.0,
+        "min_y": 32.0,
+        "max_x": 156.0,
+        "max_y": 78.0
+      },
+      "id": 2,
+      "original": "面取",
+      "translated": "倒角",
+      "match_method": "fuzzy"
+    },
+    {
+      "text": "プレート",
+      "confidence": 1.0,
+      "bbox": {
+        "min_x": 72.0,
+        "min_y": 123.0,
+        "max_x": 208.0,
+        "max_y": 172.0
+      },
+      "id": 3,
+      "original": "プレート",
+      "translated": "板/板材",
+      "match_method": "exact"
+    },
+    {
+      "text": "公差",
+      "confidence": 1.0,
+      "bbox": {
+        "min_x": 316.0,
+        "min_y": 146.0,
+        "max_x": 388.0,
+        "max_y": 188.0
+      },
+      "id": 4,
+      "original": "公差",
+      "translated": "公差",
+      "match_method": "exact"
+    },
+    {
+      "text": "ストリ",
+      "confidence": 1.0,
+      "bbox": {
+        "min_x": 310.0,
+        "min_y": 237.0,
+        "max_x": 418.0,
+        "max_y": 280.0
+      },
+      "id": 5,
+      "original": "ストリ",
+      "translated": "卸料板",
+      "match_method": "fuzzy"
+    },
+    {
+      "text": "焼入",
+      "confidence": 1.0,
+      "bbox": {
+        "min_x": 570.0,
+        "min_y": 76.0,
+        "max_x": 645.0,
+        "max_y": 120.0
+      },
+      "id": 6,
+      "original": "焼入",
+      "translated": "淬火",
+      "match_method": "exact"
+    },
+    {
+      "text": "ねじ",
+      "confidence": 1.0,
+      "bbox": {
+        "min_x": 563.0,
+        "min_y": 166.0,
+        "max_x": 637.0,
+        "max_y": 209.0
+      },
+      "id": 7,
+      "original": "ねじ",
+      "translated": "螺丝/螺纹",
+      "match_method": "exact"
+    },
+    {
+      "text": "穴加工",
+      "confidence": 1.0,
+      "bbox": {
+        "min_x": 323.0,
+        "min_y": 56.0,
+        "max_x": 431.0,
+        "max_y": 98.0
+      },
+      "id": 8,
+      "original": "穴加工",
+      "translated": "孔",
+      "match_method": "fuzzy"
+    },
+    {
+      "text": "-",
+      "confidence": 0.0,
+      "bbox": {
+        "min_x": 412.0,
+        "min_y": 259.0,
+        "max_x": 419.0,
+        "max_y": 265.0
+      },
+      "id": 9,
+      "original": "-",
+      "translated": "[未翻译]",
+      "match_method": "unmatched"
+    },
+    {
+      "text": "ッパー",
+      "confidence": 1.0,
+      "bbox": {
+        "min_x": 414.0,
+        "min_y": 248.0,
+        "max_x": 522.0,
+        "max_y": 283.0
+      },
+      "id": 10,
+      "original": "ッパー",
+      "translated": "卸料板",
+      "match_method": "fuzzy"
+    }
+  ],
+  "statistics": {
+    "total_detected": 10,
+    "translated": 9,
+    "unmatched": 1,
+    "avg_confidence": 0.9
+  }
+}
