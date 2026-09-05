@@ -1,4 +1,5 @@
 *.zip
 /output
+/logs
 *.log
 logs/app.log
