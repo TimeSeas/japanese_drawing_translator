@@ -1,5 +1,17 @@
-*.zip
-/output
-/logs
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# 运行时产物
+/output/
+/logs/
 *.log
-logs/app.log
+
+# 编辑器 / 系统
+.vscode/
+.idea/
+Thumbs.db
+desktop.ini

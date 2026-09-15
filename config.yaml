@@ -1,47 +1,39 @@
-# 日文零件图纸术语自动翻译应用 - 配置文件
-# Japanese Mechanical Drawing Terminology Auto-Translation - Configuration
+# 日文零件图纸术语自动翻译 - 运行参数
+#
+# main.py 读这个文件，把 ocr / translator / overlay / logging 四段原样传给
+# 对应模块的构造函数，preprocessing 那段逐页传给 preprocess()。
+# 相对路径都相对于本文件所在目录解析。
 
-# 图像预处理参数
 preprocessing:
   grayscale: true           # 灰度化
-  denoise: true             # 降噪
-  adaptive_threshold: true  # 自适应二值化
-  deskew: true              # 旋转校正
-  denoise_strength: 10      # 降噪强度 (1-30)
-  binary_block_size: 11     # 二值化块大小
-  binary_c: 2               # 二值化常数
-  max_dimension: 6400   # 
+  denoise: true             # NL-Means 降噪
+  denoise_strength: 10      # 降噪强度 1-30，越大越慢
+  adaptive_threshold: true  # 自适应二值化，抗光照不均
+  binary_block_size: 11     # 二值化块大小，会强制成奇数
+  binary_c: 2               # 二值化常数 C
+  max_dimension: null       # 超过这个边长先等比缩小；null = 不缩
+  deskew: false             # 旋转校正。默认关，原因见 image_processor.py
 
-# OCR 参数
 ocr:
-  lang: "ja"                # EasyOCR 日文语言代码
-  engine: "easyocr"         # OCR引擎: easyocr (推荐) | paddleocr
-  min_confidence: 0.7       # 最低置信度阈值
-  merge_iou_threshold: 0.8  # 重叠框合并 IOU 阈值
-  use_gpu: false            # 是否使用 GPU 加速
+  lang: japan               # PaddleOCR 语言代码，日文写 japan 不写 ja
+  min_confidence: 0.5       # 低于这个置信度的识别结果丢掉
+  merge_iou_threshold: 0.8  # 重合度超过这个的框合并成一个
 
-# 翻译参数
 translator:
-  dictionary_path: "dictionary.json"  # 术语词典路径
-  fuzzy_threshold: 85       # 模糊匹配最低相似度 (%)
-  untranslated_marker: "[未翻译]"  # 未匹配标记
+  dictionary_path: dictionary.json
+  fuzzy_threshold: 85       # 模糊匹配最低相似度 %。调低多认几个词，也更容易认错
 
-# 标注叠加参数
 overlay:
-  text_color: [255, 0, 0]   # 红色字体 (RGB)
-  cover_bg_color: [255, 255, 255]  # 遮挡背景色 (白色)
-  font_scale_ratio: 0.8     # 字体大小占文本框高度比例
-  default_cover_mode: true  # 默认遮挡模式
+  text_color: [255, 0, 0]          # 译文颜色
+  cover_bg_color: [255, 255, 255]  # 遮挡模式的底色
+  font_scale_ratio: 0.8            # 译文字号 = 原文框高 × 这个系数
+  min_gap: 3                       # 译文和原文框的最小间距，像素
 
-# 日志参数
 logging:
-  log_dir: "logs"
-  log_level: "INFO"
-  retention_days: 180       # 日志保留天数
-  log_format: "%(asctime)s | %(levelname)s | %(message)s"
+  log_dir: logs
+  level: INFO               # DEBUG / INFO / WARNING / ERROR
+  retention_days: 180
 
-# 输出参数
 output:
-  default_dir: "output"
-  export_image_format: "png"  # 导出图片格式 (png/jpg)
-  export_dpi: 300             # 导出DPI
+  default_dir: output       # 结果 JSON 的默认落盘位置
+  export_dpi: 300           # 导出 PDF 时的分辨率

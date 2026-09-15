@@ -1,261 +1,166 @@
-"""
-结果面板 | Result Panel
-=====================
-翻译结果表格面板，展示 OCR 识别和翻译结果。
+"""识别结果表格：ID / 原文 / 译文 / 匹配方式 / 置信度 / 坐标。
 
-功能:
-  - QTableWidget 展示: ID | 日文原文 | 中文翻译 | 匹配方式 | 置信度 | 坐标
-  - 点击行时发出信号，联动图纸预览高亮
-  - 支持按置信度/匹配方式筛选
-  - 显示统计摘要
+匹配方式这一列是有意留的 —— 客户复核时只关心 fuzzy 那些（机器猜的），
+exact 的可以跳过。筛选下拉框就是为这个场景加的。
 """
 
-from typing import List, Dict, Optional
+from typing import Dict, List
 
-from PyQt5.QtWidgets import (
-    QWidget, QVBoxLayout, QHBoxLayout, QTableWidget,
-    QTableWidgetItem, QHeaderView, QLabel, QComboBox,
-    QPushButton, QAbstractItemView, QSplitter,
-)
-from PyQt5.QtGui import QColor, QBrush, QFont
 from PyQt5.QtCore import Qt, pyqtSignal
+from PyQt5.QtGui import QBrush, QColor, QFont
+from PyQt5.QtWidgets import (
+    QAbstractItemView, QComboBox, QHBoxLayout, QHeaderView, QLabel,
+    QPushButton, QTableWidget, QTableWidgetItem, QVBoxLayout, QWidget,
+)
+
+COLUMNS = ['ID', '日文原文', '中文翻译', '匹配方式', '置信度', '坐标范围']
+
+UNTRANSLATED = '[未翻译]'
+METHOD_LABELS = {'exact': '精确', 'fuzzy': '模糊', 'unmatched': '-'}
+
+RED = QColor(200, 50, 50)
+YELLOW = QColor(180, 150, 0)
+GREEN = QColor(0, 140, 0)
 
 
 class ResultPanel(QWidget):
-    """
-    翻译结果面板。
-
-    信号:
-        text_selected(int): 用户点击表格行时发出，传递文本 ID
-        export_requested(): 请求导出 JSON 数据
-    """
-
     text_selected = pyqtSignal(int)
     export_requested = pyqtSignal()
 
-    # 表格列定义
-    COLUMNS = ['ID', '日文原文', '中文翻译', '匹配方式', '置信度', '坐标范围']
-
     def __init__(self, parent=None):
         super().__init__(parent)
+        self._all: List[Dict] = []
+        self._shown: List[Dict] = []
+        self._build_ui()
 
-        self._all_results: List[Dict] = []
-        self._filtered_results: List[Dict] = []
-
-        self._setup_ui()
-
-    def _setup_ui(self):
-        """构建 UI 布局"""
+    def _build_ui(self):
         layout = QVBoxLayout(self)
         layout.setContentsMargins(4, 4, 4, 4)
         layout.setSpacing(4)
 
-        # ---- 顶部统计栏 ----
-        top_layout = QHBoxLayout()
+        top = QHBoxLayout()
+        self._stats = QLabel("就绪")
+        self._stats.setStyleSheet("color: #555; font-size: 12px;")
+        top.addWidget(self._stats)
+        top.addStretch()
 
-        self._stats_label = QLabel("就绪")
-        self._stats_label.setStyleSheet("color: #555; font-size: 12px;")
-        top_layout.addWidget(self._stats_label)
+        top.addWidget(QLabel("筛选:"))
+        self._filter = QComboBox()
+        self._filter.addItems(['全部', '已翻译', '未翻译', '精确匹配', '模糊匹配'])
+        self._filter.currentTextChanged.connect(self._apply_filter)
+        top.addWidget(self._filter)
 
-        top_layout.addStretch()
+        export = QPushButton("导出 JSON")
+        export.setFixedWidth(100)
+        export.clicked.connect(self.export_requested.emit)
+        top.addWidget(export)
+        layout.addLayout(top)
 
-        # 筛选下拉框
-        top_layout.addWidget(QLabel("筛选:"))
-        self._filter_combo = QComboBox()
-        self._filter_combo.addItems(['全部', '已翻译', '未翻译', '精确匹配', '模糊匹配'])
-        self._filter_combo.currentTextChanged.connect(self._apply_filter)
-        top_layout.addWidget(self._filter_combo)
-
-        # 导出按钮
-        export_btn = QPushButton("导出 JSON")
-        export_btn.setFixedWidth(100)
-        export_btn.clicked.connect(self.export_requested.emit)
-        top_layout.addWidget(export_btn)
-
-        layout.addLayout(top_layout)
-
-        # ---- 结果表格 ----
         self._table = QTableWidget()
-        self._table.setColumnCount(len(self.COLUMNS))
-        self._table.setHorizontalHeaderLabels(self.COLUMNS)
-
-        # 表格设置
-        self._table.setSelectionBehavior(
-            QAbstractItemView.SelectRows
-        )
-        self._table.setSelectionMode(
-            QAbstractItemView.SingleSelection
-        )
-        self._table.setEditTriggers(
-            QAbstractItemView.NoEditTriggers
-        )
+        self._table.setColumnCount(len(COLUMNS))
+        self._table.setHorizontalHeaderLabels(COLUMNS)
+        self._table.setSelectionBehavior(QAbstractItemView.SelectRows)
+        self._table.setSelectionMode(QAbstractItemView.SingleSelection)
+        self._table.setEditTriggers(QAbstractItemView.NoEditTriggers)
         self._table.setAlternatingRowColors(True)
         self._table.verticalHeader().setVisible(False)
 
-        # 列宽设置
         header = self._table.horizontalHeader()
-        header.setSectionResizeMode(0, QHeaderView.ResizeToContents)  # ID
-        header.setSectionResizeMode(1, QHeaderView.ResizeMode.Stretch)          # 日文
-        header.setSectionResizeMode(2, QHeaderView.ResizeMode.Stretch)          # 中文
-        header.setSectionResizeMode(3, QHeaderView.ResizeToContents)  # 匹配方式
-        header.setSectionResizeMode(4, QHeaderView.ResizeToContents)  # 置信度
-        header.setSectionResizeMode(5, QHeaderView.ResizeToContents)  # 坐标
+        for col in (0, 3, 4):
+            header.setSectionResizeMode(col, QHeaderView.ResizeToContents)
+        for col in (1, 2, 5):
+            header.setSectionResizeMode(col, QHeaderView.Stretch)
 
-        # 点击事件
         self._table.cellClicked.connect(self._on_cell_clicked)
-
         layout.addWidget(self._table)
 
-    # ============================================================
-    # 数据加载
-    # ============================================================
+    # ---- 数据 ----
 
     def set_results(self, results: List[Dict]):
-        """
-        设置翻译结果数据并刷新表格。
-
-        Args:
-            results: 翻译结果列表
-        """
-        self._all_results = results
+        self._all = list(results)
         self._apply_filter()
 
-    def clear(self):
-        """清空表格"""
-        self._all_results = []
-        self._filtered_results = []
-        self._table.setRowCount(0)
-        self._stats_label.setText("就绪")
+    def select_text_id(self, text_id: int):
+        """在表格里选中指定 ID 的行并滚过去。图纸上点了标注框时联动用。"""
+        for row, item in enumerate(self._shown):
+            if item.get('id') == text_id:
+                self._table.selectRow(row)
+                self._table.scrollToItem(self._table.item(row, 0))
+                return
 
-    # ============================================================
-    # 筛选
-    # ============================================================
+    # ---- 表格刷新 ----
 
     def _apply_filter(self):
-        """根据筛选条件过滤结果"""
-        filter_text = self._filter_combo.currentText()
-
-        if filter_text == '全部':
-            self._filtered_results = list(self._all_results)
-        elif filter_text == '已翻译':
-            self._filtered_results = [
-                r for r in self._all_results
-                if r.get('translated') and r['translated'] != '[未翻译]'
-            ]
-        elif filter_text == '未翻译':
-            self._filtered_results = [
-                r for r in self._all_results
-                if not r.get('translated') or r['translated'] == '[未翻译]'
-            ]
-        elif filter_text == '精确匹配':
-            self._filtered_results = [
-                r for r in self._all_results
-                if r.get('match_method') == 'exact'
-            ]
-        elif filter_text == '模糊匹配':
-            self._filtered_results = [
-                r for r in self._all_results
-                if r.get('match_method') == 'fuzzy'
-            ]
+        mode = self._filter.currentText()
+        tests = {
+            '已翻译': lambda r: r.get('translated') not in ('', UNTRANSLATED, None),
+            '未翻译': lambda r: r.get('translated') in ('', UNTRANSLATED, None),
+            '精确匹配': lambda r: r.get('match_method') == 'exact',
+            '模糊匹配': lambda r: r.get('match_method') == 'fuzzy',
+        }
+        test = tests.get(mode)
+        self._shown = [r for r in self._all if test(r)] if test else list(self._all)
 
         self._refresh_table()
         self._update_stats()
 
     def _refresh_table(self):
-        """刷新表格内容"""
-        self._table.setRowCount(len(self._filtered_results))
+        self._table.setRowCount(len(self._shown))
 
-        for row, item in enumerate(self._filtered_results):
-            # ID
-            self._set_cell(row, 0, str(item.get('id', row + 1)))
+        for row, item in enumerate(self._shown):
+            self._cell(row, 0, item.get('id', row + 1))
 
-            # 日文原文
-            self._set_cell(row, 1, item.get('original', ''))
+            self._cell(row, 1, item.get('original', ''))
 
-            # 中文翻译
             translated = item.get('translated', '')
-            cell = self._set_cell(row, 2, translated)
-            if translated == '[未翻译]':
-                cell.setForeground(QBrush(QColor(200, 50, 50)))  # 红色标记未翻译
+            cell = self._cell(row, 2, translated)
+            if translated == UNTRANSLATED:
+                cell.setForeground(QBrush(RED))
                 cell.setFont(QFont(cell.font().family(), -1, italic=True))
 
-            # 匹配方式
             method = item.get('match_method', '')
-            method_display = {
-                'exact': '精确',
-                'fuzzy': '模糊',
-                'unmatched': '-',
-            }.get(method, method)
-            cell = self._set_cell(row, 3, method_display)
+            cell = self._cell(row, 3, METHOD_LABELS.get(method, method))
             if method == 'unmatched':
-                cell.setForeground(QBrush(QColor(180, 150, 0)))
+                cell.setForeground(QBrush(YELLOW))
 
-            # 置信度
             confidence = item.get('confidence', 0)
-            conf_text = f"{confidence:.1%}" if isinstance(confidence, float) else str(confidence)
-            cell = self._set_cell(row, 4, conf_text)
-            # 颜色: 高→绿, 中→黄, 低→红
+            cell = self._cell(row, 4, f"{confidence:.1%}"
+                              if isinstance(confidence, float) else str(confidence))
             if isinstance(confidence, (int, float)):
-                if confidence >= 0.9:
-                    cell.setForeground(QBrush(QColor(0, 140, 0)))
-                elif confidence >= 0.7:
-                    cell.setForeground(QBrush(QColor(180, 150, 0)))
-                else:
-                    cell.setForeground(QBrush(QColor(200, 50, 50)))
+                cell.setForeground(QBrush(
+                    GREEN if confidence >= 0.9 else
+                    YELLOW if confidence >= 0.7 else RED
+                ))
 
-            # 坐标范围
-            bbox = item.get('bbox', {})
-            coord_text = (
-                f"({bbox.get('min_x', '?')}, {bbox.get('min_y', '?')}) - "
-                f"({bbox.get('max_x', '?')}, {bbox.get('max_y', '?')})"
-            )
-            self._set_cell(row, 5, coord_text)
+            box = item.get('bbox', {})
+            self._cell(row, 5, "({min_x}, {min_y}) - ({max_x}, {max_y})".format(
+                **{k: box.get(k, '?') for k in
+                   ('min_x', 'min_y', 'max_x', 'max_y')}
+            ))
 
-    def _set_cell(self, row: int, col: int, text: str) -> QTableWidgetItem:
-        """设置单元格内容，返回 QTableWidgetItem"""
+    def _cell(self, row: int, col: int, text) -> QTableWidgetItem:
         item = QTableWidgetItem(str(text))
         item.setTextAlignment(Qt.AlignLeft | Qt.AlignVCenter)
         self._table.setItem(row, col, item)
         return item
 
     def _update_stats(self):
-        """更新统计摘要"""
-        total = len(self._all_results)
+        total = len(self._all)
         translated = sum(
-            1 for r in self._all_results
-            if r.get('translated') and r['translated'] != '[未翻译]'
+            1 for r in self._all
+            if r.get('translated') not in ('', UNTRANSLATED, None)
         )
-        unmatched = total - translated
-        avg_conf = (
-            sum(r.get('confidence', 0) for r in self._all_results) / total * 100
-            if total > 0 else 0
-        )
+        avg = (sum(r.get('confidence', 0) for r in self._all) / total * 100
+               if total else 0)
 
-        self._stats_label.setText(
-            f"共 {total} 条 | 已翻译 {translated} | 未匹配 {unmatched}"
-            f" | 平均置信度 {avg_conf:.1f}%"
-            + (f" | 筛选后 {len(self._filtered_results)} 条"
-               if len(self._filtered_results) != total else "")
-        )
+        text = (f"共 {total} 条 | 已翻译 {translated} | "
+                f"未匹配 {total - translated} | 平均置信度 {avg:.1f}%")
+        if len(self._shown) != total:
+            text += f" | 筛选后 {len(self._shown)} 条"
+        self._stats.setText(text)
 
     def _on_cell_clicked(self, row: int, col: int):
-        """表格行点击处理"""
-        if 0 <= row < len(self._filtered_results):
-            text_id = self._filtered_results[row].get('id', row + 1)
+        if 0 <= row < len(self._shown):
+            text_id = self._shown[row].get('id')
             if text_id:
                 self.text_selected.emit(int(text_id))
-
-    # ============================================================
-    # 数据访问
-    # ============================================================
-
-    def get_all_results(self) -> List[Dict]:
-        """返回全部结果"""
-        return list(self._all_results)
-
-    def get_selected_result(self) -> Optional[Dict]:
-        """返回当前选中的行对应的结果"""
-        current_row = self._table.currentRow()
-        if 0 <= current_row < len(self._filtered_results):
-            return self._filtered_results[current_row]
-        return None
