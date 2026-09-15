@@ -10,7 +10,7 @@ preprocessing:
   denoise_strength: 10      # 降噪强度 (1-30)
   binary_block_size: 11     # 二值化块大小
   binary_c: 2               # 二值化常数
-  max_dimension: 3000       # 大图最大边长 (超过等比缩放, 提升性能)
+  max_dimension: 6400   # 
 
 # OCR 参数
 ocr:

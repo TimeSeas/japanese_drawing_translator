@@ -36,7 +36,7 @@ DEFAULT_CONFIG = {
     'adaptive_threshold': True,    # 自适应二值化
     'binary_block_size': 11,       # 二值化块大小 (奇数, 越大块越大)
     'binary_c': 2,                 # 二值化常数 C
-    'deskew': True,                # 旋转校正
+    'deskew':False,                # 旋转校正
 }
 
 
