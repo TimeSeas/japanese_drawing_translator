@@ -31,7 +31,7 @@ Rect = Tuple[float, float, float, float]
 
 class OverlayRenderer:
     def __init__(self, text_color=(255, 0, 0), cover_bg_color=(255, 255, 255),
-                 font_scale_ratio: float = 0.8, min_gap: int = 3):
+                 font_scale_ratio: float = 0.65, min_gap: int = 3):
         self.text_color = tuple(text_color)
         self.cover_bg_color = tuple(cover_bg_color)
         self.font_scale_ratio = font_scale_ratio

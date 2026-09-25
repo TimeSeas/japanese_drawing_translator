@@ -1,6 +1,6 @@
 {
   "source_file": "演示图纸_カバー.png",
-  "processed_at": "2026-09-15T11:40:42",
+  "processed_at": "2026-09-15T13:36:10",
   "page": 1,
   "image_size": {
     "width": 2000,
@@ -8,445 +8,362 @@
   },
   "texts": [
     {
-      "text": "アルマイト",
-      "bbox": {
-        "min_x": 1348.0,
-        "min_y": 871.0,
-        "max_x": 1467.0,
-        "max_y": 894.0
-      },
-      "id": 1,
-      "ocr_confidence": 1.0,
-      "original": "アルマイト",
-      "translated": "阳极氧化",
-      "match_method": "exact",
-      "confidence": 1.0
-    },
-    {
-      "text": "技術部",
-      "bbox": {
-        "min_x": 1689.0,
-        "min_y": 156.0,
-        "max_x": 1769.0,
-        "max_y": 190.0
-      },
-      "id": 2,
-      "ocr_confidence": 0.9998,
-      "original": "技術部",
-      "translated": "技术部",
-      "match_method": "exact",
-      "confidence": 1.0
-    },
-    {
-      "text": "2ランジク",
-      "bbox": {
-        "min_x": 894.0,
-        "min_y": 304.0,
-        "max_x": 1000.0,
-        "max_y": 327.0
-      },
-      "id": 3,
-      "ocr_confidence": 0.9998,
-      "original": "2ランジク",
-      "translated": "法兰",
-      "match_method": "fuzzy",
-      "confidence": 1.0
-    },
-    {
-      "text": "正面図",
-      "bbox": {
-        "min_x": 517.0,
-        "min_y": 281.0,
-        "max_x": 583.0,
-        "max_y": 304.0
-      },
-      "id": 4,
-      "ocr_confidence": 0.9997,
-      "original": "正面図",
-      "translated": "主视图",
-      "match_method": "exact",
-      "confidence": 1.0
-    },
-    {
-      "text": "中級による",
-      "bbox": {
-        "min_x": 294.0,
-        "min_y": 1300.0,
-        "max_x": 404.0,
-        "max_y": 1323.0
-      },
-      "id": 5,
-      "ocr_confidence": 0.9996,
-      "original": "中級による",
-      "translated": "⑨公差按JIS B 0405中级。",
-      "match_method": "fuzzy",
-      "confidence": 1.0
-    },
-    {
       "text": "部品名",
+      "original": "部品名",
+      "translated": "",
+      "match_method": "skipped",
+      "confidence": 0.0,
+      "ocr_confidence": 0.9995,
       "bbox": {
         "min_x": 1592.0,
         "min_y": 54.0,
         "max_x": 1665.0,
         "max_y": 83.0
       },
-      "id": 6,
-      "ocr_confidence": 0.9995,
-      "original": "部品名",
-      "translated": "部件名",
-      "match_method": "exact",
-      "confidence": 1.0
-    },
-    {
-      "text": "ピッチ寸法公差",
-      "bbox": {
-        "min_x": 1098.0,
-        "min_y": 454.0,
-        "max_x": 1250.0,
-        "max_y": 477.0
-      },
-      "id": 7,
-      "ocr_confidence": 0.9994,
-      "original": "ピッチ寸法公差",
-      "translated": "间距尺寸公差",
-      "match_method": "exact",
-      "confidence": 1.0
-    },
-    {
-      "text": "表面処理:",
-      "bbox": {
-        "min_x": 456.0,
-        "min_y": 871.0,
-        "max_x": 565.0,
-        "max_y": 894.0
-      },
-      "id": 8,
-      "ocr_confidence": 0.9992,
-      "original": "表面処理:",
-      "translated": "表面处理",
-      "match_method": "fuzzy",
-      "confidence": 1.0
-    },
-    {
-      "text": "側面図",
-      "bbox": {
-        "min_x": 1312.0,
-        "min_y": 277.0,
-        "max_x": 1388.0,
-        "max_y": 306.0
-      },
-      "id": 9,
-      "ocr_confidence": 0.9991,
-      "original": "側面図",
-      "translated": "侧视图",
-      "match_method": "exact",
-      "confidence": 1.0
-    },
-    {
-      "text": "表面処理：",
-      "bbox": {
-        "min_x": 1229.0,
-        "min_y": 869.0,
-        "max_x": 1348.0,
-        "max_y": 898.0
-      },
-      "id": 10,
-      "ocr_confidence": 0.9976,
-      "original": "表面処理：",
-      "translated": "表面处理",
-      "match_method": "fuzzy",
-      "confidence": 1.0
-    },
-    {
-      "text": "リ取リのこ",
-      "bbox": {
-        "min_x": 1133.0,
-        "min_y": 302.0,
-        "max_x": 1246.0,
-        "max_y": 329.0
-      },
-      "id": 11,
-      "ocr_confidence": 0.9974,
-      "original": "リ取リのこ",
-      "translated": "[未翻译]",
-      "match_method": "unmatched",
-      "confidence": 0.0
-    },
-    {
-      "text": "ランプ穴はバ",
-      "bbox": {
-        "min_x": 1006.0,
-        "min_y": 304.0,
-        "max_x": 1138.0,
-        "max_y": 327.0
-      },
-      "id": 12,
-      "ocr_confidence": 0.9971,
-      "original": "ランプ穴はバ",
-      "translated": "②法兰夹紧孔去毛刺。",
-      "match_method": "fuzzy",
-      "confidence": 1.0
-    },
-    {
-      "text": "5maxとする.",
-      "bbox": {
-        "min_x": 277.0,
-        "min_y": 177.0,
-        "max_x": 396.0,
-        "max_y": 198.0
-      },
-      "id": 13,
-      "ocr_confidence": 0.9945,
-      "original": "5maxとする.",
-      "translated": "①未注凸部倒角C0.5max。",
-      "match_method": "fuzzy",
-      "confidence": 1.0
-    },
-    {
-      "text": "黒染め",
-      "bbox": {
-        "min_x": 571.0,
-        "min_y": 869.0,
-        "max_x": 648.0,
-        "max_y": 898.0
-      },
-      "id": 14,
-      "ocr_confidence": 0.9939,
-      "original": "黒染め",
-      "translated": "发黑",
-      "match_method": "exact",
-      "confidence": 1.0
-    },
-    {
-      "text": "参照のこと",
-      "bbox": {
-        "min_x": 1294.0,
-        "min_y": 633.0,
-        "max_x": 1394.0,
-        "max_y": 656.0
-      },
-      "id": 15,
-      "ocr_confidence": 0.9886,
-      "original": "参照のこと",
-      "translated": "请参照",
-      "match_method": "exact",
-      "confidence": 1.0
-    },
-    {
-      "text": "(第三角法)",
-      "bbox": {
-        "min_x": 1744.0,
-        "min_y": 1254.0,
-        "max_x": 1854.0,
-        "max_y": 1283.0
-      },
-      "id": 16,
-      "ocr_confidence": 0.9786,
-      "original": "(第三角法)",
-      "translated": "(第三角法)",
-      "match_method": "exact",
-      "confidence": 1.0
-    },
-    {
-      "text": "・カエリは完全に除去のニと",
-      "bbox": {
-        "min_x": 150.0,
-        "min_y": 1244.0,
-        "max_x": 433.0,
-        "max_y": 1269.0
-      },
-      "id": 17,
-      "ocr_confidence": 0.9708,
-      "original": "・カエリは完全に除去のニと",
-      "translated": "⑧毛刺飞边完全去除。",
-      "match_method": "fuzzy",
-      "confidence": 0.92
-    },
-    {
-      "text": "の穴加工部は面取リのこと",
-      "bbox": {
-        "min_x": 81.0,
-        "min_y": 1190.0,
-        "max_x": 346.0,
-        "max_y": 1210.0
-      },
-      "id": 18,
-      "ocr_confidence": 0.9681,
-      "original": "の穴加工部は面取リのこと",
-      "translated": "孔加工部倒角",
-      "match_method": "fuzzy",
-      "confidence": 0.91
-    },
-    {
-      "text": "ての角部はR0.3以下とする。",
-      "bbox": {
-        "min_x": 125.0,
-        "min_y": 1133.0,
-        "max_x": 396.0,
-        "max_y": 1160.0
-      },
-      "id": 19,
-      "ocr_confidence": 0.9641,
-      "original": "ての角部はR0.3以下とする。",
-      "translated": "⑥所有角部R0.3以下。",
-      "match_method": "fuzzy",
-      "confidence": 1.0
-    },
-    {
-      "text": "縮尺1：2！",
-      "bbox": {
-        "min_x": 1498.0,
-        "min_y": 1319.0,
-        "max_x": 1585.0,
-        "max_y": 1342.0
-      },
-      "id": 20,
-      "ocr_confidence": 0.9613,
-      "original": "縮尺1：2！",
-      "translated": "1:2",
-      "match_method": "fuzzy",
-      "confidence": 1.0
-    },
-    {
-      "text": "8バリ",
-      "bbox": {
-        "min_x": 81.0,
-        "min_y": 1244.0,
-        "max_x": 152.0,
-        "max_y": 1267.0
-      },
-      "id": 21,
-      "ocr_confidence": 0.9518,
-      "original": "8バリ",
-      "translated": "毛刺",
-      "match_method": "fuzzy",
-      "confidence": 1.0
-    },
-    {
-      "text": "SUS304",
-      "bbox": {
-        "min_x": 1690.0,
-        "min_y": 88.0,
-        "max_x": 1769.0,
-        "max_y": 117.0
-      },
-      "id": 22,
-      "ocr_confidence": 0.9394,
-      "original": "SUS304",
-      "translated": "SUS304不锈钢",
-      "match_method": "exact",
-      "confidence": 1.0
-    },
-    {
-      "text": "9公差はＪＩＳ",
-      "bbox": {
-        "min_x": 83.0,
-        "min_y": 1300.0,
-        "max_x": 204.0,
-        "max_y": 1323.0
-      },
-      "id": 23,
-      "ocr_confidence": 0.901,
-      "original": "9公差はＪＩＳ",
-      "translated": "[未翻译]",
-      "match_method": "unmatched",
-      "confidence": 0.0
-    },
-    {
-      "text": "5検穴加工部にシンブを圧入のこと",
-      "bbox": {
-        "min_x": 889.0,
-        "min_y": 760.0,
-        "max_x": 1250.0,
-        "max_y": 794.0
-      },
-      "id": 24,
-      "ocr_confidence": 0.8991,
-      "original": "5検穴加工部にシンブを圧入のこと",
-      "translated": "销孔加工部压入销",
-      "match_method": "fuzzy",
-      "confidence": 0.93
-    },
-    {
-      "text": "4Eł牝加工部の寸法形状はđ×ｆデ",
-      "bbox": {
-        "min_x": 942.0,
-        "min_y": 633.0,
-        "max_x": 1254.0,
-        "max_y": 660.0
-      },
-      "id": 25,
-      "ocr_confidence": 0.8717,
-      "original": "4Eł牝加工部の寸法形状はđ×ｆデ",
-      "translated": "[未翻译]",
-      "match_method": "unmatched",
-      "confidence": 0.0
-    },
-    {
-      "text": "3印加工部は、",
-      "bbox": {
-        "min_x": 939.0,
-        "min_y": 448.0,
-        "max_x": 1082.0,
-        "max_y": 482.0
-      },
-      "id": 26,
-      "ocr_confidence": 0.8549,
-      "original": "3印加工部は、",
-      "translated": "刻印加工部",
-      "match_method": "fuzzy",
-      "confidence": 1.0
-    },
-    {
-      "text": "0指示無き凸部はCü",
-      "bbox": {
-        "min_x": 71.0,
-        "min_y": 173.0,
-        "max_x": 273.0,
-        "max_y": 200.0
-      },
-      "id": 27,
-      "ocr_confidence": 0.8178,
-      "original": "0指示無き凸部はCü",
-      "translated": "未注凸部",
-      "match_method": "fuzzy",
-      "confidence": 1.0
+      "orientation": "h",
+      "id": 1
     },
     {
       "text": "力バ",
+      "original": "力バ",
+      "translated": "[未翻译]",
+      "match_method": "unmatched",
+      "confidence": 0.0,
+      "ocr_confidence": 0.7434,
       "bbox": {
         "min_x": 1696.0,
         "min_y": 60.0,
         "max_x": 1744.0,
         "max_y": 77.0
       },
-      "id": 28,
-      "ocr_confidence": 0.7434,
-      "original": "力バ",
-      "translated": "[未翻译]",
-      "match_method": "unmatched",
-      "confidence": 0.0
+      "orientation": "h",
+      "suspect": {
+        "term": "工程能力",
+        "translation": "工序能力",
+        "score": 67
+      },
+      "id": 2
     },
     {
-      "text": "ø全",
+      "text": "SUS304",
+      "original": "SUS304",
+      "translated": "",
+      "match_method": "skipped",
+      "confidence": 0.0,
+      "ocr_confidence": 0.9394,
+      "bbox": {
+        "min_x": 1690.0,
+        "min_y": 88.0,
+        "max_x": 1769.0,
+        "max_y": 117.0
+      },
+      "orientation": "h",
+      "id": 3
+    },
+    {
+      "text": "尺度",
+      "original": "尺度",
+      "translated": "",
+      "match_method": "skipped",
+      "confidence": 0.0,
+      "ocr_confidence": 0.9948,
+      "bbox": {
+        "min_x": 1592.0,
+        "min_y": 121.0,
+        "max_x": 1674.0,
+        "max_y": 156.0
+      },
+      "orientation": "h",
+      "id": 4
+    },
+    {
+      "text": "0指示無き凸部はCü5maxとする.",
+      "original": "0指示無き凸部はCü5maxとする.",
+      "translated": "①未注凸部倒角C0.5max。",
+      "match_method": "fuzzy",
+      "confidence": 0.88,
+      "ocr_confidence": 0.8178,
+      "bbox": {
+        "min_x": 71.0,
+        "min_y": 173.0,
+        "max_x": 396.0,
+        "max_y": 200.0
+      },
+      "orientation": "h",
+      "id": 5
+    },
+    {
+      "text": "技術部",
+      "original": "技術部",
+      "translated": "",
+      "match_method": "skipped",
+      "confidence": 0.0,
+      "ocr_confidence": 0.9998,
+      "bbox": {
+        "min_x": 1689.0,
+        "min_y": 156.0,
+        "max_x": 1769.0,
+        "max_y": 190.0
+      },
+      "orientation": "h",
+      "id": 6
+    },
+    {
+      "text": "正面図",
+      "original": "正面図",
+      "translated": "",
+      "match_method": "skipped",
+      "confidence": 0.0,
+      "ocr_confidence": 0.9997,
+      "bbox": {
+        "min_x": 517.0,
+        "min_y": 281.0,
+        "max_x": 583.0,
+        "max_y": 304.0
+      },
+      "orientation": "h",
+      "id": 7
+    },
+    {
+      "text": "側面図",
+      "original": "側面図",
+      "translated": "",
+      "match_method": "skipped",
+      "confidence": 0.0,
+      "ocr_confidence": 0.9991,
+      "bbox": {
+        "min_x": 1312.0,
+        "min_y": 277.0,
+        "max_x": 1388.0,
+        "max_y": 306.0
+      },
+      "orientation": "h",
+      "id": 8
+    },
+    {
+      "text": "2ランジクランプ穴はバリ取リのこ-",
+      "original": "2ランジクランプ穴はバリ取リのこ-",
+      "translated": "②法兰夹紧孔去毛刺。",
+      "match_method": "fuzzy",
+      "confidence": 0.88,
+      "ocr_confidence": 0.7086,
+      "bbox": {
+        "min_x": 894.0,
+        "min_y": 302.0,
+        "max_x": 1267.0,
+        "max_y": 329.0
+      },
+      "orientation": "h",
+      "id": 9
+    },
+    {
+      "text": "3印加工部は、ピッチ寸法公差",
+      "original": "3印加工部は、ピッチ寸法公差",
+      "translated": "③刻印加工部，间距尺寸公差±0.005。",
+      "match_method": "fuzzy",
+      "confidence": 0.93,
+      "ocr_confidence": 0.8549,
+      "bbox": {
+        "min_x": 939.0,
+        "min_y": 448.0,
+        "max_x": 1250.0,
+        "max_y": 482.0
+      },
+      "orientation": "h",
+      "id": 10
+    },
+    {
+      "text": "4Eł牝加工部の寸法形状はđ×ｆデ-`-",
+      "original": "4Eł牝加工部の寸法形状はđ×ｆデ-`-",
+      "translated": "[未翻译]",
+      "match_method": "unmatched",
+      "confidence": 0.0,
+      "ocr_confidence": 0.6919,
+      "bbox": {
+        "min_x": 942.0,
+        "min_y": 633.0,
+        "max_x": 1285.0,
+        "max_y": 660.0
+      },
+      "orientation": "h",
+      "suspect": {
+        "term": "EWC加工部の寸法形状はdxfデータ参照のこと",
+        "translation": "EWC加工部尺寸形状参照dxf数据",
+        "score": 65
+      },
+      "id": 11
+    },
+    {
+      "text": "参照のこと",
+      "original": "参照のこと",
+      "translated": "请参照",
+      "match_method": "exact",
+      "confidence": 1.0,
+      "ocr_confidence": 0.9886,
+      "bbox": {
+        "min_x": 1294.0,
+        "min_y": 633.0,
+        "max_x": 1394.0,
+        "max_y": 656.0
+      },
+      "orientation": "h",
+      "id": 12
+    },
+    {
+      "text": "5検穴加工部にシンブを圧入のこと",
+      "original": "5検穴加工部にシンブを圧入のこと",
+      "translated": "销孔加工部压入销",
+      "match_method": "fuzzy",
+      "confidence": 0.93,
+      "ocr_confidence": 0.8991,
+      "bbox": {
+        "min_x": 889.0,
+        "min_y": 760.0,
+        "max_x": 1250.0,
+        "max_y": 794.0
+      },
+      "orientation": "h",
+      "id": 13
+    },
+    {
+      "text": "表面処理:黒染め",
+      "original": "表面処理:黒染め",
+      "translated": "表面处理:发黑",
+      "match_method": "exact",
+      "confidence": 1.0,
+      "ocr_confidence": 0.9939,
+      "bbox": {
+        "min_x": 456.0,
+        "min_y": 869.0,
+        "max_x": 648.0,
+        "max_y": 898.0
+      },
+      "orientation": "h",
+      "id": 14
+    },
+    {
+      "text": "表面処理：アルマイト",
+      "original": "表面処理：アルマイト",
+      "translated": "表面处理：阳极氧化",
+      "match_method": "exact",
+      "confidence": 1.0,
+      "ocr_confidence": 0.9976,
+      "bbox": {
+        "min_x": 1229.0,
+        "min_y": 869.0,
+        "max_x": 1467.0,
+        "max_y": 898.0
+      },
+      "orientation": "h",
+      "id": 15
+    },
+    {
+      "text": "ø全ての角部はR0.3以下とする。",
+      "original": "ø全ての角部はR0.3以下とする。",
+      "translated": "所有角部R0.3以下",
+      "match_method": "fuzzy",
+      "confidence": 1.0,
+      "ocr_confidence": 0.5976,
       "bbox": {
         "min_x": 81.0,
-        "min_y": 1135.0,
-        "max_x": 129.0,
-        "max_y": 1158.0
+        "min_y": 1133.0,
+        "max_x": 396.0,
+        "max_y": 1160.0
       },
-      "id": 29,
-      "ocr_confidence": 0.5976,
-      "original": "ø全",
-      "translated": "全",
+      "orientation": "h",
+      "id": 16
+    },
+    {
+      "text": "の穴加工部は面取リのこと",
+      "original": "の穴加工部は面取リのこと",
+      "translated": "孔加工部倒角",
       "match_method": "fuzzy",
-      "confidence": 1.0
+      "confidence": 0.91,
+      "ocr_confidence": 0.9681,
+      "bbox": {
+        "min_x": 81.0,
+        "min_y": 1190.0,
+        "max_x": 346.0,
+        "max_y": 1210.0
+      },
+      "orientation": "h",
+      "id": 17
+    },
+    {
+      "text": "8バリ・カエリは完全に除去のニと",
+      "original": "8バリ・カエリは完全に除去のニと",
+      "translated": "毛刺飞边完全去除",
+      "match_method": "fuzzy",
+      "confidence": 0.93,
+      "ocr_confidence": 0.9518,
+      "bbox": {
+        "min_x": 81.0,
+        "min_y": 1244.0,
+        "max_x": 433.0,
+        "max_y": 1269.0
+      },
+      "orientation": "h",
+      "id": 18
+    },
+    {
+      "text": "(第三角法)",
+      "original": "(第三角法)",
+      "translated": "",
+      "match_method": "skipped",
+      "confidence": 0.0,
+      "ocr_confidence": 0.9786,
+      "bbox": {
+        "min_x": 1744.0,
+        "min_y": 1254.0,
+        "max_x": 1854.0,
+        "max_y": 1283.0
+      },
+      "orientation": "h",
+      "id": 19
+    },
+    {
+      "text": "9公差はＪＩＳＢ0405中級による",
+      "original": "9公差はＪＩＳＢ0405中級による",
+      "translated": "[未翻译]",
+      "match_method": "unmatched",
+      "confidence": 0.0,
+      "ocr_confidence": 0.901,
+      "bbox": {
+        "min_x": 83.0,
+        "min_y": 1300.0,
+        "max_x": 404.0,
+        "max_y": 1323.0
+      },
+      "orientation": "h",
+      "suspect": {
+        "term": "公差はJIS B 0405中級による。",
+        "translation": "公差按JIS B 0405中级。",
+        "score": 65
+      },
+      "id": 20
+    },
+    {
+      "text": "縮尺1：2！",
+      "original": "縮尺1：2！",
+      "translated": "",
+      "match_method": "skipped",
+      "confidence": 0.0,
+      "ocr_confidence": 0.9613,
+      "bbox": {
+        "min_x": 1498.0,
+        "min_y": 1319.0,
+        "max_x": 1585.0,
+        "max_y": 1342.0
+      },
+      "orientation": "h",
+      "id": 21
     }
   ],
   "statistics": {
-    "total_detected": 29,
-    "translated": 25,
-    "unmatched": 4,
-    "avg_confidence": 0.8538
+    "total_detected": 21,
+    "translated": 10,
+    "skipped": 8,
+    "unmatched": 3,
+    "avg_confidence": 0.946
   }
 }

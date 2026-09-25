@@ -15,10 +15,16 @@ from PyQt5.QtWidgets import QFrame, QGraphicsPixmapItem, QGraphicsScene, QGraphi
 ZOOM_STEP = 1.15
 MIN_ZOOM, MAX_ZOOM = 0.1, 10.0
 
-PEN_NORMAL = QPen(QColor(50, 100, 255), 1.5)
-BRUSH_NORMAL = QBrush(QColor(50, 100, 255, 25))
-PEN_ACTIVE = QPen(QColor(255, 50, 50), 3)
-BRUSH_ACTIVE = QBrush(QColor(255, 50, 50, 60))
+# 普通标注框只描一条虚线边，不填充。填了之后每一条识别结果都是一块半透明
+# 蓝底，几十条叠上去等于给图纸蒙了层纱，原文和线条全被压暗了 —— 而预览的
+# 重点是看图，框只是提示"这里有字、可以点"。选中那条才实心强调。
+PEN_NORMAL = QPen(QColor(70, 120, 220, 150), 1, Qt.DashLine)
+PEN_NORMAL.setCosmetic(True)          # 线宽不随缩放变，永远是屏幕上 1px
+BRUSH_NORMAL = QBrush(Qt.NoBrush)
+
+PEN_ACTIVE = QPen(QColor(255, 50, 50), 2)
+PEN_ACTIVE.setCosmetic(True)
+BRUSH_ACTIVE = QBrush(QColor(255, 50, 50, 55))
 
 
 class ImageViewer(QGraphicsView):

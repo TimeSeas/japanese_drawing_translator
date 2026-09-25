@@ -119,16 +119,22 @@ class DataStore:
 def _statistics(texts: List[Dict]) -> Dict:
     total = len(texts)
     if total == 0:
-        return {'total_detected': 0, 'translated': 0,
+        return {'total_detected': 0, 'translated': 0, 'skipped': 0,
                 'unmatched': 0, 'avg_confidence': 0.0}
 
-    translated = sum(1 for t in texts
-                     if t.get('translated') and t['translated'] != '[未翻译]')
-    avg_conf = sum(t.get('confidence', 0) for t in texts) / total
+    translated = [t for t in texts
+                  if t.get('match_method') in ('exact', 'fuzzy')]
+    skipped = sum(1 for t in texts if t.get('match_method') == 'skipped')
+
+    # 平均置信度只算真翻了的那些。未匹配和无需翻译的 confidence 是占位 0，
+    # 一起平均只会把这个数拉低，看不出翻译本身的质量。
+    avg_conf = (sum(t.get('confidence', 0) for t in translated)
+                / len(translated) if translated else 0.0)
 
     return {
         'total_detected': total,
-        'translated': translated,
-        'unmatched': total - translated,
+        'translated': len(translated),
+        'skipped': skipped,
+        'unmatched': total - len(translated) - skipped,
         'avg_confidence': round(avg_conf, 4),
     }

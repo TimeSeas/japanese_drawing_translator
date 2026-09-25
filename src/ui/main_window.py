@@ -12,7 +12,7 @@ from pathlib import Path
 from PyQt5.QtCore import QSize, Qt, QThread, pyqtSignal
 from PyQt5.QtGui import QKeySequence
 from PyQt5.QtWidgets import (
-    QAction, QCheckBox, QFileDialog, QHBoxLayout, QLabel, QMainWindow,
+    QAction, QFileDialog, QHBoxLayout, QLabel, QMainWindow,
     QMessageBox, QProgressBar, QPushButton, QSplitter, QStatusBar,
     QToolBar, QVBoxLayout, QWidget,
 )
@@ -22,12 +22,87 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 from src.data_store import DataStore
 from src.file_parser import SUPPORTED_EXTENSIONS, get_file_info, parse_file
 from src.image_processor import preprocess
-from src.ocr_engine import OCREngine
+from src.ocr_engine import OCREngine, is_term_text
 from src.overlay_renderer import OverlayRenderer
 from src.translator import Translator
 from src.ui.dict_editor import DictEditorDialog
 from src.ui.image_viewer import ImageViewer
 from src.ui.result_panel import ResultPanel
+
+TRANSLATED_METHODS = ('exact', 'fuzzy')
+
+
+def _translate_one(src: dict, translator: Translator) -> dict:
+    """查一次词典，拼成一条结果。
+
+    字段是**白名单**式的：只从这里列出来的键进结果，所以 recognize() 挂在
+    条目上的 `parts` 不会跟着流到界面和导出的 JSON 里。
+    """
+    translated, method, conf, suspect = translator.translate(src['text'])
+    item = {
+        'text': src['text'],
+        'original': src['text'],
+        'translated': translated,
+        'match_method': method,
+        'confidence': conf,
+        # confidence 进来时是 OCR 的识别置信度，这里改名留住再写匹配得分。
+        # 两个分数含义不同：一个说"这行日文认没认对"，一个说"词典匹配得
+        # 准不准"。直接覆盖的话，就分不出某条未匹配到底是 OCR 认错了字，
+        # 还是词典里压根没这个词。
+        'ocr_confidence': src['confidence'],
+        'bbox': dict(src['bbox']),
+        # 横排 'h' / 竖排 'v' / 斜排 'rot'（见 ocr_engine._orientation）。
+        # 只是标出来，不参与翻译 —— 竖排和斜排目前认不出，标出来是为了
+        # 让它们别再悄无声息地混在横排里。
+        'orientation': src.get('orientation', 'h'),
+    }
+    # 差一点没够阈值的候选（见 translator._SUSPECT_MARGIN）。
+    # 只是个提示，不改变 match_method，也不参与统计。
+    if suspect:
+        item['suspect'] = suspect
+    return item
+
+
+def _translate_item(item: dict, translator: Translator) -> list:
+    """一条识别结果 → 一条或多条翻译结果。
+
+    多数情况就是一条。例外只有一种：这条是**接龙拼起来的**（OCR 把被表格线、
+    引出线切开的一句话接回了整句，见 ocr_engine._merge_same_line），拼完整句
+    反而查不到词典。这时候拼接不但没帮忙，还把本来能翻的碎片一起拖下水。
+
+    实测就有一例：整句「4Eł牝加工部の寸法形状はđ×ｆデ-`-参照のこと」是四段
+    拼的，整句查不到；但最后一段「参照のこと」单独拿出来是词典里的精确词条
+    （→ 请参照）。不拆的话它跟着整句一起变成"未翻译"。
+
+    拆开之后每条碎片带着**自己原来的 bbox** 画回原位，不是整句的并集框 ——
+    所以这是"还原"，不是"在整句上补一条"。
+    """
+    result = _translate_one(item, translator)
+
+    parts = item.get('parts') or []
+    if result['match_method'] != 'unmatched' or len(parts) <= 1:
+        return [result]
+
+    # 拆的时候要再筛一遍"非术语"：`-`、`` `- `` 这种碎片本来是夹在整句里被
+    # recognize() 的过滤放行的，单独成条只会多出几行 [未翻译] 的噪声。
+    pieces = [_translate_one(p, translator) for p in parts
+              if is_term_text(p['text'])]
+
+    # 只有**精确**命中才值得拆，模糊命中不算。这条线是量出来的，不是随手
+    # 保守：模糊碎片会两头亏 —— 整句那条连同它自己的"疑似"一起消失（而整句
+    # 的疑似往往比碎片更准，因为它更接近词典里的整句词条），碎片自己还会
+    # 掉进另一个坑：候选长度门槛只管"词条不能比文本短太多"，**不管词条比
+    # 文本长多少**，于是 partial_ratio 认为"短串是长串子串"依旧给 100。
+    #
+    # 实测（拆「9公差はＪＩＳ / Ｂ0405 / 中級による」那条）：5 个字的
+    # 「中級による」恰好是整句词条的子串，拿到 100 分，把整句的译文
+    # 『⑨公差按JIS B 0405中级。』原样贴进了它自己那个小框里。拆之前这条是
+    # "未翻译 + 疑似（而且疑似是对的）"，拆之后成了"模糊命中、100 分"，
+    # 看着更确定，实际框错了位置 —— 比不拆更糟。
+    if not any(p['match_method'] == 'exact' for p in pieces):
+        return [result]
+
+    return pieces
 
 FILE_FILTER = (
     "支持的图纸文件 (*.pdf *.jpg *.jpeg *.png *.bmp);;"
@@ -59,7 +134,8 @@ class ProcessThread(QThread):
         images, _ = parse_file(self.file_path)
 
         ocr = OCREngine(**self.cfg['ocr'])
-        translator = Translator(self.cfg['translator']['fuzzy_threshold'])
+        translator = Translator(self.cfg['translator']['fuzzy_threshold'],
+                                self.cfg['translator']['kanji_traps'])
         translator.load_dictionary(self.cfg['translator']['dictionary_path'])
         renderer = OverlayRenderer(**self.cfg['overlay'])
 
@@ -67,21 +143,20 @@ class ProcessThread(QThread):
         for page_no, image in enumerate(images, start=1):
             results = ocr.recognize(preprocess(image, self.cfg['preprocessing']))
 
+            texts = []
             for item in results:
-                translated, method, conf = translator.translate(item['text'])
-                # confidence 进来时是 OCR 的识别置信度，这里改名留住再写匹配得分。
-                # 两个分数含义不同：一个说"这行日文认没认对"，一个说"词典匹配得
-                # 准不准"。直接覆盖的话，就分不出某条未匹配到底是 OCR 认错了字，
-                # 还是词典里压根没这个词。
-                item['ocr_confidence'] = item.pop('confidence')
-                item.update(original=item['text'], translated=translated,
-                            match_method=method, confidence=conf)
+                texts.extend(_translate_item(item, translator))
+
+            # 拆碎片会让条目数变多，recognize() 里编好的号就对不上了，这里重编。
+            # 编号是给"图上点框 ↔ 表格选中"双向联动用的，只在单页内要求唯一。
+            for i, item in enumerate(texts, start=1):
+                item['id'] = i
 
             pages.append({
                 'page': page_no,
                 'image_size': image.size,
-                'texts': results,
-                'annotated': renderer.render(image, results,
+                'texts': texts,
+                'annotated': renderer.render(image, texts,
                                              cover_mode=self.cover_mode),
             })
 
@@ -95,7 +170,8 @@ class MainWindow(QMainWindow):
         self.cfg = config
 
         self.store = DataStore(**config['logging'])
-        self.translator = Translator(config['translator']['fuzzy_threshold'])
+        self.translator = Translator(config['translator']['fuzzy_threshold'],
+                                     config['translator']['kanji_traps'])
         self.renderer = OverlayRenderer(**config['overlay'])
         self.store.setup_logging()
 
@@ -108,7 +184,11 @@ class MainWindow(QMainWindow):
         self.original_images = []
         self.pages = []          # [{page, image_size, texts, annotated}, ...]
         self.page_index = 0
-        self.cover_mode = True
+        # 标注模式固定成中日对照（保留原文，译文画在旁边）。
+        # 界面上那个「遮挡原文」开关撤掉了：这是个**核对**工具，把日文盖住等于
+        # 把要核对的东西销毁了 —— 用户没法再回头确认翻译对不对。
+        # OverlayRenderer 里的遮挡模式没删，只是界面不再暴露它。
+        self.cover_mode = False
         self.thread = None
 
         self._build_ui()
@@ -134,15 +214,6 @@ class MainWindow(QMainWindow):
         self.file_label.setStyleSheet("font-weight: bold; color: #333;")
         bar.addWidget(self.file_label)
         bar.addStretch()
-
-        self.cover_checkbox = QCheckBox("遮挡原文")
-        self.cover_checkbox.setChecked(True)
-        self.cover_checkbox.setToolTip(
-            "勾选：用白底盖住日文，译文画在原地\n"
-            "不勾选：保留原文，译文画在旁边（中日对照）"
-        )
-        self.cover_checkbox.stateChanged.connect(self._on_cover_mode_changed)
-        bar.addWidget(self.cover_checkbox)
 
         self.process_btn = QPushButton("▶  执行识别与翻译")
         self.process_btn.setStyleSheet(
@@ -336,7 +407,8 @@ class MainWindow(QMainWindow):
         self.pages = result['pages']
 
         texts = [t for p in self.pages for t in p['texts']]
-        translated = sum(1 for t in texts if t['match_method'] != 'unmatched')
+        translated = sum(1 for t in texts if t['match_method'] in ('exact', 'fuzzy'))
+        skipped = sum(1 for t in texts if t['match_method'] == 'skipped')
         elapsed = result['elapsed']
 
         self._save_json(result)
@@ -344,7 +416,8 @@ class MainWindow(QMainWindow):
 
         self.status_label.setText(
             f"处理完成 | 共 {len(texts)} 条, 已翻译 {translated}, "
-            f"未匹配 {len(texts) - translated}, 耗时 {elapsed} 秒"
+            f"无需翻译 {skipped}, 未匹配 {len(texts) - translated - skipped}, "
+            f"耗时 {elapsed} 秒"
             + (" ✓" if elapsed <= 5.0 else " ⚠ 超过 5 秒")
         )
 
@@ -368,19 +441,6 @@ class MainWindow(QMainWindow):
                 self._status(f"保存 JSON 时出错: {e}")
 
     # ---- 交互 ----
-
-    def _on_cover_mode_changed(self, state: int):
-        self.cover_mode = bool(state)
-        if not self.pages:
-            return
-
-        page = self.pages[self.page_index]
-        page['annotated'] = self.renderer.render(
-            self.original_images[self.page_index], page['texts'],
-            cover_mode=self.cover_mode,
-        )
-        self.viewer.load_image(page['annotated'])
-        self.viewer.add_annotations(page['texts'])
 
     def _on_text_selected(self, text_id: int):
         self.viewer.highlight_text(text_id)
